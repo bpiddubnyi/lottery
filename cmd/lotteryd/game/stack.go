@@ -8,11 +8,11 @@ import (
 	"github.com/bpiddubnyi/lottery"
 )
 
-type winStack struct {
+type WinStack struct {
 	l *list.List
 }
 
-func newWinStack() (*winStack, error) {
+func NewWinStack() (*WinStack, error) {
 	l := list.New()
 	for i := 0; i < stackLen; i++ {
 		var p lottery.Pair
@@ -24,10 +24,10 @@ func newWinStack() (*winStack, error) {
 
 		l.PushBack(p)
 	}
-	return &winStack{l: l}, nil
+	return &WinStack{l: l}, nil
 }
 
-func (s *winStack) Pop() (lottery.Pair, error) {
+func (s *WinStack) Pop() (lottery.Pair, error) {
 	var p lottery.Pair
 
 	// Sanity checks. None of this should ever really happen

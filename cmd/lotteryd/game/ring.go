@@ -11,12 +11,12 @@ const (
 	stackSize = stackLen * 2
 )
 
-type winRing struct {
+type WinRing struct {
 	data [stackSize]byte
 	cur  int
 }
 
-func (s *winRing) Pop() (lottery.Pair, error) {
+func (s *WinRing) Pop() (lottery.Pair, error) {
 	if s.cur+2 > stackSize {
 		s.cur = 0
 	}
@@ -32,8 +32,8 @@ func (s *winRing) Pop() (lottery.Pair, error) {
 	return win, err
 }
 
-func newWinRing() (*winRing, error) {
-	s := &winRing{}
+func NewWinRing() (*WinRing, error) {
+	s := &WinRing{}
 	_, err := rand.Read(s.data[:])
 	if err != nil {
 		return nil, err

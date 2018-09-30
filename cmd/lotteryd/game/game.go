@@ -2,47 +2,42 @@ package game
 
 import "github.com/bpiddubnyi/lottery"
 
+// PairStack is a comon interface for different lucky pair stack implementations
 type PairStack interface {
 	Pop() (lottery.Pair, error)
 }
 
-// game describes lottery game logic
-type game struct {
-	jackpot uint64
-	stack   PairStack
+// Game describes lottery game logic
+type Game struct {
+	Jackpot uint64
+	Stack   PairStack
 }
 
-// newGame creates new Game instance
-func newGame() (*game, error) {
-	g := &game{}
-
-	var err error
-	g.stack, err = newWinStack()
-	if err != nil {
-		return nil, err
-	}
-
-	return g, nil
+// New creates new Game instance
+func New(stack PairStack) *Game {
+	return &Game{Stack: stack}
 }
 
-// play checks if player's bet metches to a win pair from lucky pairs stack and
+// Play checks if player's bet metches to a win pair from lucky pairs stack and
 // returns a match result
-func (g *game) play(fee uint64, bet lottery.Pair) (*lottery.Response, error) {
-	win, err := g.stack.Pop()
+func (g *Game) Play(fee uint64, bet lottery.Pair) (*lottery.Response, error) {
+	win, err := g.Stack.Pop()
 	if err != nil {
 		return nil, err
 	}
 
 	r := &lottery.Response{Type: lottery.NoWin}
 	if win == bet {
-		if g.jackpot != 0 {
+		if g.Jackpot != 0 {
 			r.Type = lottery.Win
+			r.Jackpot = g.Jackpot + fee
+			g.Jackpot = 0
 		} else {
 			r.Type = lottery.Bonus
+			g.Jackpot = fee
 		}
+	} else {
+		g.Jackpot += fee
 	}
-
-	g.jackpot += fee
-	r.Jackpot = g.jackpot
 	return r, nil
 }

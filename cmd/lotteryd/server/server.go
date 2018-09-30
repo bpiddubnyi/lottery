@@ -1,4 +1,4 @@
-package game
+package server
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/bpiddubnyi/lottery"
+	"github.com/bpiddubnyi/lottery/cmd/lotteryd/game"
 	"github.com/bpiddubnyi/lottery/encoding"
 	"github.com/bpiddubnyi/lottery/encoding/plain"
 )
@@ -30,20 +31,17 @@ type Server struct {
 	// Number of worker routines
 	Workers uint
 
-	game  *game
+	game  *game.Game
 	gameL sync.Mutex
 }
 
-func NewServer() (*Server, error) {
-	g, err := newGame()
-	if err != nil {
-		return nil, err
-	}
+func New(stack game.PairStack) *Server {
 	return &Server{
 		Timeout: defaultTimeout,
 		Workers: defaultWorkers,
 		Proto:   defaultProtocol,
-		game:    g}, nil
+		game:    game.New(stack),
+	}
 }
 
 func (s *Server) Listen(ctx context.Context, addr string) error {
@@ -98,7 +96,7 @@ func (s *Server) play(fee uint64, bet lottery.Pair) (*lottery.Response, error) {
 	s.gameL.Lock()
 	defer s.gameL.Unlock()
 
-	return s.game.play(fee, bet)
+	return s.game.Play(fee, bet)
 }
 
 func (s *Server) match(c net.Conn) (*lottery.Response, error) {
@@ -149,6 +147,6 @@ func (s *Server) work(connC <-chan net.Conn) {
 		if err := s.handleConn(c); err != nil {
 			log.Printf("error: %s: failed to handle connection: %s", remote, err)
 		}
-		log.Printf("info: current jackpot: %d", s.game.jackpot)
+		log.Printf("info: current jackpot: %d", s.game.Jackpot)
 	}
 }
