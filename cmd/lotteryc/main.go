@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/bpiddubnyi/lottery"
-
 	"github.com/bpiddubnyi/lottery/cmd/lotteryc/game"
 )
 

@@ -6,11 +6,10 @@ import (
 	"log"
 	"net"
 
-	"github.com/google/uuid"
-
 	"github.com/bpiddubnyi/lottery"
 	"github.com/bpiddubnyi/lottery/encoding"
 	"github.com/bpiddubnyi/lottery/encoding/plain"
+	"github.com/google/uuid"
 )
 
 var (
