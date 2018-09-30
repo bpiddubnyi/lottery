@@ -159,7 +159,7 @@ func unmarshalResponseType(data []byte) (lottery.ResponseType, error) {
 func (dec *ResponseDecoder) Decode(r *lottery.Response) error {
 	buf := make([]byte, 20)
 	n, err := readUntil(dec.r, buf, fieldSeparator)
-	if err != nil && err != io.EOF {
+	if err != nil {
 		return err
 	}
 
@@ -172,7 +172,7 @@ func (dec *ResponseDecoder) Decode(r *lottery.Response) error {
 	}
 
 	n, err = readUntil(dec.r, buf, fieldSeparator)
-	if err != nil && err != io.EOF {
+	if err != nil {
 		return err
 	}
 
