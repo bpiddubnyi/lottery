@@ -9,6 +9,10 @@ import (
 // Pair represents players guess for a lottery winning combination
 type Pair [2]byte
 
+func (p Pair) String() string {
+	return fmt.Sprintf("%d:%d", p[0], p[1])
+}
+
 // Request is a client request message to the lottery game server
 type Request struct {
 	UUID  uuid.UUID
@@ -18,7 +22,7 @@ type Request struct {
 
 func (r Request) String() string {
 	return fmt.Sprintf("uuid: %s: fee: %d guess: %s",
-		r.UUID.String(), r.Fee, r.Guess[:])
+		r.UUID.String(), r.Fee, r.Guess.String())
 }
 
 // ResponseType is a servers response message enum type
