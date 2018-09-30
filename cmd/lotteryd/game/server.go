@@ -149,5 +149,6 @@ func (s *Server) work(connC <-chan net.Conn) {
 		if err := s.handleConn(c); err != nil {
 			log.Printf("error: %s: failed to handle connection: %s", remote, err)
 		}
+		log.Printf("info: current jackpot: %d", s.game.jackpot)
 	}
 }
